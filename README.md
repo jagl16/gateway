@@ -8,8 +8,10 @@ Scaling Cloud is a project to practice tools and technologies such as Kotlin, Sp
 * [Kotlin](https://kotlinlang.org/) - Used as the programming language
 * [Spring Boot](https://spring.io/) - Used as the web framework
 * [Kubernetes](https://kubernetes.io/) - Used as the container orchestrator
-* [Docker](https://www.docker.com/) - Used to containerize the services
-* [Gradle](https://gradle.org/) - Dependency Management
+* [Docker](https://www.docker.com/) - Used as the container creator
+* [Gradle](https://gradle.org/) - Used as the dependency manager
+* [Consul](https://www.consul.io/) - Used as the service discovery
+* [Ambassador](https://www.getambassador.io/) - Used as the API gateway
 
 ## Authors
 

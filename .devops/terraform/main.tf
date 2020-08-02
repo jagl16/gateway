@@ -1,7 +1,3 @@
-terraform {
-  required_version = ">= 0.12.9"
-}
-
 provider "aws" {
   region = "eu-west-1"
 }
@@ -38,28 +34,29 @@ module "vpc" {
   enable_dns_hostnames = true
 
   public_subnet_tags = {
-    "kubernetes.io/cluster/${local.prefix}" = "shared"
-    "kubernetes.io/role/elb"                = "1"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/role/elb"                      = "1"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/cluster/${local.prefix}" = "shared"
-    "kubernetes.io/role/internal-elb"       = "1"
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    "kubernetes.io/role/internal-elb"             = "1"
   }
 
-  tags = merge(
-    local.common_tags,
-    map("Name", "${local.prefix}-vpc")
-  )
+  vpc_tags = {
+    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+  }
+
+  tags = local.common_tags
 }
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "12.2.0"
 
-  cluster_name = "${local.prefix}-cluster"
+  cluster_name = local.cluster_name
   vpc_id       = module.vpc.vpc_id
-  subnets      = module.vpc.private_subnets
+  subnets      = concat(module.vpc.private_subnets, module.vpc.public_subnets)
 
   workers_additional_policies = [
     aws_iam_policy.autoscaler_policy.arn

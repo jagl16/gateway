@@ -1,6 +1,8 @@
 locals {
   environment = terraform.workspace
 
+  cluster_name = "${local.prefix}-cluster"
+
   prefix = lookup({
     default = "${local.environment}-${var.prefix}"
   }, local.environment)
