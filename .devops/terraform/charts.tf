@@ -102,7 +102,7 @@ resource "helm_release" "ambassador" {
 
 resource "helm_release" "ambassador_consul_resolver" {
   name      = "${local.prefix}-ambassador-consul-resolver"
-  chart     = "./helm-charts/ambassador-consul-resolver"
+  chart     = "../helm-charts/ambassador-consul-resolver"
   namespace = "ambassador"
 
   depends_on = [
@@ -132,7 +132,7 @@ resource "helm_release" "ambassador_consul_resolver" {
 
 resource "helm_release" "hello_world" {
   name      = "${var.prefix}-hello-world-service"
-  chart     = "./helm-charts/hello-world-service"
+  chart     = "../helm-charts/hello-world-service"
   namespace = "services"
 
   depends_on = [

@@ -68,4 +68,22 @@ subprojects {
             "api"(kotlin("stdlib-jdk8"))
         }
     }
+
+    plugins.withType<JibPlugin> {
+        configure<JibExtension> {
+            from {
+                image = "docker.io/adoptopenjdk/openjdk11:alpine-slim"
+            }
+            to {
+                image = "096007086684.dkr.ecr.eu-west-1.amazonaws.com/scaling-cloud/${project.name}"
+            }
+            container {
+                jvmFlags = listOf(
+                    "-Dfile.encoding=UTF-8",
+                    "-XX:MaxRAMPercentage=75.0",
+                    "-noverify"
+                )
+            }
+        }
+    }
 }
