@@ -1,0 +1,130 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches:
+      - master
+      - production
+  pull_request:
+    branches:
+      - master
+      - production
+
+env:
+  java: 11.0.x
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.filter.outputs.services }}
+      infrastructure: ${{ steps.filter.outputs.infrastructure }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2.2.0
+        id: filter
+        with:
+          filters: |
+            services:
+              - 'services/**/*'
+              - 'libraries/**/*'
+            infrastructure:
+              - '.devops/helm-charts/*'
+              - '.devops/terraform/*'
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: ${{ needs.changes.outputs.services == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gradle/wrapper-validation-action@v1
+      - name: Set up Java ${{ env.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java }}
+      - name: Set up Gradle cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-${{ env.java }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.java }}-gradle-
+      - name: Test Services
+        run: ./gradlew test
+
+  build:
+    runs-on: ubuntu-20.04
+    needs: [changes, test]
+    if: ${{ needs.changes.outputs.services == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Install AWS credential helper
+        run: |
+          sudo apt update
+          sudo apt install amazon-ecr-credential-helper
+      - name: Set up Java ${{ env.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java }}
+      - name: Build, tag and push image to Amazon ECR
+        uses: eskatos/gradle-command-action@v1
+        with:
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+          arguments: jib
+
+  validate:
+    runs-on: ubuntu-latest
+    needs: [changes]
+    if: ${{ needs.changes.outputs.infrastructure == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.29
+      - name: Validate Terraform
+        run: |
+          cd .devops/terraform
+          terraform init -backend=false
+          terraform validate
+          terraform fmt -check
+
+  plan:
+    runs-on: ubuntu-latest
+    needs: [changes, validate]
+    if: ${{ needs.changes.outputs.infrastructure == 'true' }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.12.29
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Plan Staging
+        run: |
+          cd .devops/terraform
+          terraform init
+          terraform workspace select staging || terraform workspace new staging
+          terraform plan
+
