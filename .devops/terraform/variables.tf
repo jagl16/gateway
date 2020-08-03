@@ -9,3 +9,7 @@ variable "project" {
 variable "contact" {
   default = "erik@erikvandam.dev"
 }
+
+variable "hostname" {
+  default = "scaling.cloud"
+}

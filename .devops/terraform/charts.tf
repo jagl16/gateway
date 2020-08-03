@@ -70,6 +70,12 @@ resource "helm_release" "ambassador" {
   }
 
   set {
+    name  = "service.annotations.external-dns\\.alpha\\.kubernetes\\.io/hostname"
+    value = var.hostname
+    type  = "string"
+  }
+
+  set {
     name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
     value = "nlb"
     type  = "string"
@@ -78,6 +84,18 @@ resource "helm_release" "ambassador" {
   set {
     name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled"
     value = "true"
+    type  = "string"
+  }
+
+  set {
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-backend-protocol"
+    value = "http"
+    type  = "string"
+  }
+
+  set {
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-ports"
+    value = "443"
     type  = "string"
   }
 }
