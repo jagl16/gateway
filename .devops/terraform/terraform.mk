@@ -26,6 +26,10 @@ tf-approved-apply:
 tf-destroy:
 	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform destroy
 
+.PHONY: tf-approved-apply
+tf-approved-destroy:
+	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform destroy -auto-approve
+
 .PHONY: tf-destroy
 tf-current-workspace:
 	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform workspace show

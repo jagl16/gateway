@@ -22,6 +22,10 @@ resource "helm_release" "consul" {
   chart      = "consul"
   namespace  = "consul"
 
+  depends_on = [
+    module.eks,
+  ]
+
   set {
     name  = "server.replicas"
     value = "1"
@@ -54,6 +58,11 @@ resource "helm_release" "ambassador" {
   chart      = "ambassador"
   namespace  = "ambassador"
 
+  depends_on = [
+    module.eks,
+    module.acm,
+  ]
+
   set {
     name  = "adminService.create"
     value = "false"
@@ -70,12 +79,6 @@ resource "helm_release" "ambassador" {
   }
 
   set {
-    name  = "service.annotations.external-dns\\.alpha\\.kubernetes\\.io/hostname"
-    value = var.hostname
-    type  = "string"
-  }
-
-  set {
     name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-type"
     value = "nlb"
     type  = "string"
@@ -88,15 +91,8 @@ resource "helm_release" "ambassador" {
   }
 
   set {
-    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-backend-protocol"
-    value = "http"
-    type  = "string"
-  }
-
-  set {
-    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-ports"
-    value = "443"
-    type  = "string"
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
+    value = module.acm.this_acm_certificate_arn
   }
 }
 
@@ -130,13 +126,13 @@ resource "helm_release" "ambassador_consul_resolver" {
   }
 }
 
-resource "helm_release" "hello_world" {
-  name      = "${var.prefix}-hello-world-service"
-  chart     = "../helm-charts/hello-world-service"
-  namespace = "services"
-
-  depends_on = [
-    helm_release.ambassador,
-    helm_release.consul,
-  ]
-}
+//resource "helm_release" "hello_world" {
+//  name      = "${var.prefix}-hello-world-service"
+//  chart     = "../helm-charts/hello-world-service"
+//  namespace = "services"
+//
+//  depends_on = [
+//    helm_release.ambassador,
+//    helm_release.consul,
+//  ]
+//}

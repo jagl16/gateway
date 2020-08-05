@@ -3,7 +3,11 @@ locals {
 
   cluster_name = "${local.prefix}-cluster"
 
+  domain = "scaling.cloud"
+
   prefix = "${local.environment}-${var.prefix}"
+
+  use_existing_route53_zone = true
 
   vpc_cidr = lookup({
     default = "10.0.0.0/16"
