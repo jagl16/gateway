@@ -4,7 +4,7 @@ metadata:
   name: {{ include "hello-world-service.fullname" . }}
 spec:
   prefix: /api/hello-world-service/
-  service: {{ .Chart.Name }}
+  service: {{ .Values.namespace }}.{{ .Chart.Name }}
   resolver: consul-dc1
   load_balancer:
     policy: round_robin
