@@ -24,6 +24,7 @@ resource "helm_release" "consul" {
 
   depends_on = [
     module.eks,
+    kubernetes_namespace.consul,
   ]
 
   set {
@@ -61,6 +62,7 @@ resource "helm_release" "ambassador" {
   depends_on = [
     module.eks,
     module.acm,
+    kubernetes_namespace.ambassador,
   ]
 
   set {
