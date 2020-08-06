@@ -20,5 +20,5 @@ jib {
 
 dependencies {
     implementation(project(":libraries:api"))
-    implementation(project(":libraries:test"))
+    testImplementation(project(":libraries:test"))
 }

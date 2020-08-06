@@ -3,7 +3,8 @@ val dependencyVersions = mapOf(
     "com.nhaarman.mockitokotlin2:mockito-kotlin" to "2.2.0",
     "org.junit.jupiter" to "5.5.2",
     "org.springframework.boot:spring-boot-starter" to "2.3.1.RELEASE",
-    "org.springframework.boot:spring-boot-starter-webflux" to "2.3.1.RELEASE"
+    "org.springframework.boot:spring-boot-starter-webflux" to "2.3.1.RELEASE",
+    "org.springframework.boot:spring-boot-starter-test" to "2.3.1.RELEASE"
 )
 
 allprojects {
