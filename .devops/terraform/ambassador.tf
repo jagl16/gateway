@@ -23,7 +23,7 @@ resource "helm_release" "ambassador" {
   ]
 
   values = [
-    file(format("%s/%s", "./helm-charts/ambassador", "values.yaml"))
+    file(format("%s/%s", "../helm-charts/ambassador", "values.yaml"))
   ]
 
   set {
@@ -34,7 +34,7 @@ resource "helm_release" "ambassador" {
 
 resource "helm_release" "ambassador_consul_resolver" {
   name      = "${local.prefix}-ambassador-consul-resolver"
-  chart     = "./helm-charts/ambassador-consul-resolver"
+  chart     = "../helm-charts/ambassador-consul-resolver"
   namespace = "ambassador"
 
   depends_on = [
