@@ -8,10 +8,13 @@ resource "helm_release" "hello_world" {
     value = "hello.${local.domain}"
   }
 
-
   set {
     name  = "name"
     value = "hello-world-service:8080"
+  }
+  set {
+    name  = "fullnameOverride"
+    value = "hello-world-service"
   }
 
   set {

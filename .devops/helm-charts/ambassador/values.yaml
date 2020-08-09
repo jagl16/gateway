@@ -24,10 +24,9 @@ service:
           xff_num_trusted_hops: 1
           use_proxy_proto: true
           use_remote_address: false
-          readiness_probe:
-            enabled: false
-          liveness_probe:
-            enabled: false
+          resolver: consul-dc1
+          load_balancer:
+            policy: round_robin
       ----
       apiVersion: getambassador.io/v2
       kind: Host

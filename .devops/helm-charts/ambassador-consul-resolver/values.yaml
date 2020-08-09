@@ -1,0 +1,7 @@
+consul:
+  host: consul.service.consul
+  port: 8500
+  datacenter: dc1
+
+resolver:
+  name: consul-dc1

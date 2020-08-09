@@ -3,6 +3,7 @@ apiVersion: getambassador.io/v2
 kind: TLSContext
 metadata:
   name: tls-secret
+  namespace: ambassador
 spec:
   hosts:
     - {{ .Values.host }}
@@ -12,10 +13,8 @@ apiVersion: getambassador.io/v1
 kind: Mapping
 metadata:
   name: {{ include "hello-world-service.fullname" . }}
+  namespace: ambassador
 spec:
   prefix: /
   host: {{ .Values.host }}
-  service: {{ .Values.Name }}
-  resolver: consul-dc1
-  load_balancer:
-    policy: round_robin
+  service: https://{{ .Chart.Name }}
