@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController
 class SampleApi {
     @GetMapping("/")
     fun home(): String {
-        return "Hi, welcome to the world."
+        return "Hello, welcome to the world."
     }
 }
