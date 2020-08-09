@@ -10,6 +10,10 @@ tf-fmt:
 tf-validate:
 	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform validate
 
+.PHONY: tf-refresh
+tf-refresh:
+	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform refresh
+
 .PHONY: tf-plan
 tf-plan:
 	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform plan

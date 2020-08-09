@@ -1,6 +1,8 @@
 replicaCount: 2
 
-namespace:
+secretName:
+host:
+name:
 
 image:
   repository: 096007086684.dkr.ecr.eu-west-1.amazonaws.com/scaling-cloud/hello-world

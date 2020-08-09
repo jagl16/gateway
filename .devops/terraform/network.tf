@@ -27,5 +27,8 @@ module "vpc" {
     "kubernetes.io/cluster/${local.cluster_name}" = "shared"
   }
 
-  tags = local.common_tags
+  tags = merge(
+    local.common_tags,
+    map("Name", "${local.prefix}-vpc")
+  )
 }

@@ -1,0 +1,65 @@
+adminService:
+  create: "false"
+
+namespace:
+  name: "ambassador"
+
+service:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "https"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    getambassador.io/config: |
+      ---
+      apiVersion: getambassador.io/v2
+      kind: Module
+      metadata:
+        name: ambassador
+        namespace: ambassador
+      spec:
+        config:
+          diagnostics:
+            enabled: true
+          xff_num_trusted_hops: 1
+          use_proxy_proto: true
+          use_remote_address: false
+          readiness_probe:
+            enabled: false
+          liveness_probe:
+            enabled: false
+      ----
+      apiVersion: getambassador.io/v2
+      kind: Host
+      metadata:
+        name: ambassador
+        namespace: ambassador
+      spec:
+        hostname: "*"
+        selector:
+          matchLabels:
+            hostname: wildcard
+        acmeProvider:
+          authority: none
+        requestPolicy:
+          insecure:
+            action: Redirect
+      ---
+      apiVersion: getambassador.io/v2
+      kind:  TLSContext
+      metadata:
+        name:  tls
+        namespace: ambassador
+      spec:
+        hosts: ["*"]
+        secret: ambassador-certs
+        alpn_protocols: h2[, http/1.1]
+  externalTrafficPolicy: Local
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8443
+  type: LoadBalancer

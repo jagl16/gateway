@@ -32,7 +32,6 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.app.port }}
-              protocol: TCP
           livenessProbe:
             httpGet:
               path: /

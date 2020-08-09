@@ -1,0 +1,36 @@
+resource "helm_release" "consul" {
+  name       = "${local.prefix}-consul"
+  repository = "https://helm.releases.hashicorp.com"
+  chart      = "consul"
+  namespace  = "consul"
+
+  depends_on = [
+    module.eks,
+    kubernetes_namespace.consul,
+  ]
+
+  set {
+    name  = "server.replicas"
+    value = "1"
+  }
+
+  set {
+    name  = "server.bootstrapExpect"
+    value = "1"
+  }
+
+  set {
+    name  = "global.name"
+    value = "consul"
+  }
+
+  set {
+    name  = "syncCatalog.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "connectInject.enabled"
+    value = "true"
+  }
+}
