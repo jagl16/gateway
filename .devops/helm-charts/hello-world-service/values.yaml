@@ -1,8 +1,5 @@
 replicaCount: 2
 
-secretName:
-host:
-
 image:
   repository: 096007086684.dkr.ecr.eu-west-1.amazonaws.com/scaling-cloud/hello-world
   version: latest

@@ -1,15 +1,3 @@
-resource "kubernetes_secret" "ambassador-certs" {
-  metadata {
-    name      = "ambassador-certs"
-    namespace = "ambassador"
-  }
-
-  data = {
-    "tls.crt" = file("./templates/certs/server.cert")
-    "tls.key" = file("./templates/certs/server.key")
-  }
-}
-
 resource "helm_release" "ambassador" {
   name       = "${local.prefix}-ambassador"
   repository = "https://www.getambassador.io"
@@ -17,47 +5,122 @@ resource "helm_release" "ambassador" {
   namespace  = "ambassador"
 
   depends_on = [
-    module.eks,
-    module.acm,
     kubernetes_namespace.ambassador,
-  ]
-
-  values = [
-    file(format("%s/%s", "../helm-charts/ambassador", "values.yaml"))
   ]
 
   set {
     name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
     value = module.acm.this_acm_certificate_arn
+    type  = "string"
+  }
+
+  set {
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-ports"
+    value = "443"
+    type  = "string"
+  }
+
+  set {
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-backend-protocol"
+    value = "http"
+    type  = "string"
+  }
+
+  set {
+    name  = "service.http.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "service.http.port"
+    value = "80"
+  }
+
+  set {
+    name  = "service.https.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "service.https.port"
+    value = "443"
   }
 }
 
-resource "helm_release" "ambassador_consul_resolver" {
-  name      = "${local.prefix}-ambassador-consul-resolver"
-  chart     = "../helm-charts/ambassador-consul-resolver"
-  namespace = "ambassador"
+resource "kubernetes_manifest" "ambassador_config" {
+  provider = kubernetes-alpha
+
+  depends_on = [
+    helm_release.ambassador,
+    kubernetes_manifest.ambassador_host,
+  ]
+
+  manifest = {
+    apiVersion = "getambassador.io/v2"
+    kind       = "Module"
+    metadata = {
+      name      = "ambassador"
+      namespace = "ambassador"
+    }
+    spec = {
+      config = {
+        xff_num_trusted_hops = 1
+        use_remote_address   = false
+        resolver             = "consul-dc1"
+        load_balancer = {
+          policy = "round_robin"
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_manifest" "ambassador_host" {
+  provider = kubernetes-alpha
 
   depends_on = [
     helm_release.ambassador,
   ]
 
-  set {
-    name  = "resolver.name"
-    value = "consul-dc1"
+  manifest = {
+    apiVersion = "getambassador.io/v2"
+    kind       = "Host"
+    metadata = {
+      name      = "scaling.cloud"
+      namespace = "ambassador"
+    }
+    spec = {
+      hostname = "scaling.cloud"
+      acmeProvider = {
+        authority = "None"
+      }
+      requestPolicy = {
+        insecure = {
+          action         = "Redirect"
+          additionalPort = 8080
+        }
+      }
+    }
   }
+}
 
-  set {
-    name  = "consul.host"
-    value = "consul.service.consul"
-  }
+resource "kubernetes_manifest" "ambassador_consul_resolver" {
+  provider = kubernetes-alpha
 
-  set {
-    name  = "consul.port"
-    value = "8500"
-  }
+  depends_on = [
+    helm_release.ambassador,
+  ]
 
-  set {
-    name  = "consul.datacenter"
-    value = "dc1"
+  manifest = {
+    apiVersion = "getambassador.io/v2"
+    kind       = "ConsulResolver"
+    metadata = {
+      name      = "consul-dc1"
+      namespace = "ambassador"
+    }
+    spec = {
+      address    = "127.0.0.1:8500"
+      datacenter = "dc1"
+    }
   }
 }

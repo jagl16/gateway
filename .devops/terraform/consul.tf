@@ -20,8 +20,8 @@ resource "helm_release" "consul" {
   }
 
   set {
-    name  = "global.name"
-    value = "consul"
+    name  = "ui.enabled"
+    value = "true"
   }
 
   set {
