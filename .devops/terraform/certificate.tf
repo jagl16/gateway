@@ -7,9 +7,7 @@ module "acm" {
 
   wait_for_validation = true
 
-  subject_alternative_names = [
-    "hello.${local.domain}",
-  ]
+  subject_alternative_names = []
 
   tags = merge(
     local.common_tags,
