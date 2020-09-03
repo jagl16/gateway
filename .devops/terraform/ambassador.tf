@@ -32,6 +32,12 @@ resource "helm_release" "ambassador" {
     type  = "string"
   }
 
+  set {
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled"
+    value = "true"
+    type  = "string"
+  }
+
   values = [
     <<-EOF
     service:
