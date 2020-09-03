@@ -27,24 +27,25 @@ resource "helm_release" "ambassador" {
   }
 
   set {
-    name  = "service.http.enabled"
-    value = "true"
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-proxy-protocol"
+    value = "*"
+    type  = "string"
   }
 
-  set {
-    name  = "service.http.port"
-    value = "80"
-  }
+  values = [
+    <<-EOF
+    service:
+      type: LoadBalancer
 
-  set {
-    name  = "service.https.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "service.https.port"
-    value = "443"
-  }
+      ports:
+        - name: http
+          port: 80
+          targetPort: 8080
+        - name: https
+          port: 443
+          targetPort: 8080
+    EOF
+  ]
 }
 
 resource "kubernetes_manifest" "ambassador_config" {
