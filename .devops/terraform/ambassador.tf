@@ -120,7 +120,7 @@ resource "kubernetes_manifest" "ambassador_consul_resolver" {
       namespace = "ambassador"
     }
     spec = {
-      address    = "127.0.0.1:8500"
+      address    = format("%s-consul-server.%s.svc.cluster.local:8500", helm_release.consul.name, helm_release.consul.namespace)
       datacenter = "dc1"
     }
   }
