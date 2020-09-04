@@ -9,6 +9,8 @@ locals {
 
   use_existing_route53_zone = true
 
+  resolver_name = "consul-dc1"
+
   vpc_cidr = lookup({
     default = "10.0.0.0/16"
     staging = "172.0.0.0/16"

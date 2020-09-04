@@ -27,14 +27,14 @@ resource "helm_release" "ambassador" {
   }
 
   set {
-    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-proxy-protocol"
-    value = "*"
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled"
+    value = "true"
     type  = "string"
   }
 
   set {
-    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-cross-zone-load-balancing-enabled"
-    value = "true"
+    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-proxy-protocol"
+    value = "*"
     type  = "string"
   }
 
@@ -42,6 +42,7 @@ resource "helm_release" "ambassador" {
     <<-EOF
     service:
       type: LoadBalancer
+      externalTrafficPolicy: Local
 
       ports:
         - name: http
@@ -60,6 +61,7 @@ resource "kubernetes_manifest" "ambassador_config" {
   depends_on = [
     helm_release.ambassador,
     kubernetes_manifest.ambassador_host,
+    kubernetes_manifest.ambassador_consul_resolver,
   ]
 
   manifest = {
@@ -72,8 +74,9 @@ resource "kubernetes_manifest" "ambassador_config" {
     spec = {
       config = {
         xff_num_trusted_hops = 1
+        use_proxy_proto      = true
         use_remote_address   = false
-        resolver             = "consul-dc1"
+        resolver             = local.resolver_name
         load_balancer = {
           policy = "round_robin"
         }
@@ -93,18 +96,22 @@ resource "kubernetes_manifest" "ambassador_host" {
     apiVersion = "getambassador.io/v2"
     kind       = "Host"
     metadata = {
-      name      = "scaling.cloud"
+      name      = "ambassador"
       namespace = "ambassador"
     }
     spec = {
-      hostname = "scaling.cloud"
+      hostname = "*"
+      selector = {
+        matchLabels = {
+          hostname = "wildcard"
+        }
+      }
       acmeProvider = {
         authority = "None"
       }
       requestPolicy = {
         insecure = {
-          action         = "Redirect"
-          additionalPort = 8080
+          action = "Redirect"
         }
       }
     }
@@ -122,7 +129,7 @@ resource "kubernetes_manifest" "ambassador_consul_resolver" {
     apiVersion = "getambassador.io/v2"
     kind       = "ConsulResolver"
     metadata = {
-      name      = "consul-dc1"
+      name      = local.resolver_name
       namespace = "ambassador"
     }
     spec = {
