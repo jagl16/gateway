@@ -9,4 +9,9 @@ class SampleApi {
     fun home(): String {
         return "Hello, welcome to the world."
     }
+
+    @GetMapping("/healthz")
+    fun healthz(): String {
+        return "ok"
+    }
 }
