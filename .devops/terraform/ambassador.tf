@@ -93,12 +93,7 @@ resource "kubernetes_manifest" "ambassador_host" {
       namespace = "ambassador"
     }
     spec = {
-      hostname = "*"
-      selector = {
-        matchLabels = {
-          hostname = "wildcard"
-        }
-      }
+      hostname = local.domain
       acmeProvider = {
         authority = "None"
       }
