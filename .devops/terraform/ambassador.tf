@@ -1,10 +1,11 @@
 resource "helm_release" "ambassador" {
-  name       = "${local.prefix}-ambassador"
+  name       = "ambassador"
   repository = "https://www.getambassador.io"
   chart      = "ambassador"
   namespace  = "ambassador"
 
   depends_on = [
+    module.eks,
     kubernetes_namespace.ambassador,
   ]
 

@@ -1,5 +1,5 @@
 resource "helm_release" "hello_world" {
-  name      = "${var.prefix}-hello-world-service"
+  name      = "hello-world-service"
   chart     = "./helm-charts/hello-world-service"
   namespace = "services"
 

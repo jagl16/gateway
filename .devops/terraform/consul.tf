@@ -1,5 +1,5 @@
 resource "helm_release" "consul" {
-  name       = "${local.prefix}-consul"
+  name       = "consul"
   repository = "https://helm.releases.hashicorp.com"
   chart      = "consul"
   namespace  = "consul"
