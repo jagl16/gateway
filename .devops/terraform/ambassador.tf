@@ -33,17 +33,10 @@ resource "helm_release" "ambassador" {
     type  = "string"
   }
 
-  set {
-    name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-proxy-protocol"
-    value = "*"
-    type  = "string"
-  }
-
   values = [
     <<-EOF
     service:
       type: LoadBalancer
-      externalTrafficPolicy: Local
 
       ports:
         - name: http
@@ -74,8 +67,7 @@ resource "kubernetes_manifest" "ambassador_config" {
     }
     spec = {
       config = {
-        xff_num_trusted_hops = 1
-        use_proxy_proto      = true
+        xff_num_trusted_hops = 2
         use_remote_address   = false
         resolver             = local.resolver_name
         load_balancer = {
@@ -112,7 +104,7 @@ resource "kubernetes_manifest" "ambassador_host" {
       }
       requestPolicy = {
         insecure = {
-          action = "Redirect"
+          action = "Route"
         }
       }
     }
