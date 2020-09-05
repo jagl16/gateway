@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   terraform:
-    image: hashicorp/terraform:0.12.29
+    image: hashicorp/terraform:0.13.2
     volumes:
       - .:/infra
       - ../helm-charts:/infra/helm-charts:ro
