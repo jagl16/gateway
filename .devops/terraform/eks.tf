@@ -22,9 +22,9 @@ module "eks" {
     {
       name                 = "worker-group-1"
       instance_type        = "t3.large"
-      asg_desired_capacity = 2
-      asg_max_size         = 3
-      asg_min_size         = 1
+      asg_desired_capacity = 3
+      asg_max_size         = 5
+      asg_min_size         = 3
       autoscaling_enabled  = true
     }
   ]

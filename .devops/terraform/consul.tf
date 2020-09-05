@@ -9,28 +9,26 @@ resource "helm_release" "consul" {
     kubernetes_namespace.consul,
   ]
 
-  set {
-    name  = "server.replicas"
-    value = "1"
-  }
+  values = [
+    <<-EOF
+    global:
+      name: consul
+      acls:
+        manageSystemACLs: false
 
-  set {
-    name  = "server.bootstrapExpect"
-    value = "1"
-  }
+    ui:
+      enabled: true
 
-  set {
-    name  = "ui.enabled"
-    value = "true"
-  }
+    server:
+      replicas: 2
+      bootstrapExpect: 2
 
-  set {
-    name  = "syncCatalog.enabled"
-    value = "true"
-  }
+    syncCatalog:
+      enabled: true
 
-  set {
-    name  = "connectInject.enabled"
-    value = "true"
-  }
+    connectInject:
+      enabled: true
+      k8sAllowNamespaces: ["*"]
+    EOF
+  ]
 }
