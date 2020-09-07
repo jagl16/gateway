@@ -4,4 +4,4 @@ metadata:
   name: {{ include "hello-world-service.fullname" . }}
 spec:
   prefix: /api/hello-world
-  service: {{ .Chart.Name }}:8080
+  service: {{ .Chart.Name }}
