@@ -20,8 +20,8 @@ resource "helm_release" "consul" {
       enabled: true
 
     server:
-      replicas: 2
-      bootstrapExpect: 2
+      replicas: 1
+      bootstrapExpect: 1
 
     syncCatalog:
       enabled: true
