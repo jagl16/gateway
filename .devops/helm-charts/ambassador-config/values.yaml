@@ -1,0 +1,9 @@
+resolver:
+  name: consul-dc1
+
+consul:
+  host:
+  datacenter: dc1
+
+ambassador:
+  hostname: "*"

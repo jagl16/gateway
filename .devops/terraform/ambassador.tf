@@ -49,80 +49,29 @@ resource "helm_release" "ambassador" {
   ]
 }
 
-resource "kubernetes_manifest" "ambassador_config" {
-  provider = kubernetes-alpha
+resource "helm_release" "ambassador_config" {
+  name = "ambassador-config"
+  chart = "./helm-charts/ambassador-config"
+  namespace = "ambassador"
 
   depends_on = [
+    kubernetes_namespace.ambassador,
+    helm_release.consul,
     helm_release.ambassador,
-    kubernetes_manifest.ambassador_host,
-    kubernetes_manifest.ambassador_consul_resolver,
   ]
 
-  manifest = {
-    apiVersion = "getambassador.io/v2"
-    kind       = "Module"
-    metadata = {
-      name      = "ambassador"
-      namespace = "ambassador"
-    }
-    spec = {
-      config = {
-        xff_num_trusted_hops = 2
-        use_remote_address   = false
-        resolver             = local.resolver_name
-        load_balancer = {
-          policy = "round_robin"
-        }
-      }
-    }
+  set {
+    name = "resolver.name"
+    value = local.resolver_name
   }
-}
 
-resource "kubernetes_manifest" "ambassador_host" {
-  provider = kubernetes-alpha
-
-  depends_on = [
-    helm_release.ambassador,
-  ]
-
-  manifest = {
-    apiVersion = "getambassador.io/v2"
-    kind       = "Host"
-    metadata = {
-      name      = "ambassador"
-      namespace = "ambassador"
-    }
-    spec = {
-      hostname = local.domain
-      acmeProvider = {
-        authority = "None"
-      }
-      requestPolicy = {
-        insecure = {
-          action = "Route"
-        }
-      }
-    }
+  set {
+    name = "consul.host"
+    value = format("consul-server.%s.svc.cluster.local:8500", helm_release.consul.namespace)
   }
-}
 
-resource "kubernetes_manifest" "ambassador_consul_resolver" {
-  provider = kubernetes-alpha
-
-  depends_on = [
-    helm_release.ambassador,
-  ]
-
-  manifest = {
-    apiVersion = "getambassador.io/v2"
-    kind       = "ConsulResolver"
-    metadata = {
-      name      = local.resolver_name
-      namespace = "ambassador"
-    }
-    spec = {
-      address    = format("%s-consul-server.%s.svc.cluster.local:8500", helm_release.consul.name, helm_release.consul.namespace)
-      datacenter = "dc1"
-    }
+  set {
+    name = "ambassador.hostname"
+    value = local.domain
   }
 }

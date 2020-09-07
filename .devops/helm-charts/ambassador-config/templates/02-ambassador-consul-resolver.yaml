@@ -1,0 +1,7 @@
+apiVersion: getambassador.io/v2
+kind: ConsulResolver
+metadata:
+  name: {{ .Values.resolver.name | quote }}
+spec:
+  address: {{ .Values.consul.host | quote }}
+  datacenter: {{ .Values.consul.datacenter | quote }}
