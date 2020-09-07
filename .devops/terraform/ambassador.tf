@@ -50,8 +50,8 @@ resource "helm_release" "ambassador" {
 }
 
 resource "helm_release" "ambassador_config" {
-  name = "ambassador-config"
-  chart = "./helm-charts/ambassador-config"
+  name      = "ambassador-config"
+  chart     = "./helm-charts/ambassador-config"
   namespace = "ambassador"
 
   depends_on = [
@@ -61,17 +61,17 @@ resource "helm_release" "ambassador_config" {
   ]
 
   set {
-    name = "resolver.name"
+    name  = "resolver.name"
     value = local.resolver_name
   }
 
   set {
-    name = "consul.host"
+    name  = "consul.host"
     value = format("consul-server.%s.svc.cluster.local:8500", helm_release.consul.namespace)
   }
 
   set {
-    name = "ambassador.hostname"
+    name  = "ambassador.hostname"
     value = local.domain
   }
 }
