@@ -32,4 +32,4 @@ tf-apply-%: ## Invokes terraform apply command
 
 .PHONY: tf-destroy-%
 tf-destroy-%:  ## Invokes terraform destroy command
-	${TERRAFORM}  destroy
+	${TERRAFORM}  destroy -auto-approve
