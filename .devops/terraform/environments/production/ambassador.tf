@@ -51,7 +51,7 @@ resource "helm_release" "ambassador" {
 
 resource "helm_release" "ambassador_config" {
   name      = "ambassador-config"
-  chart     = "./helm-charts/ambassador-config"
+  chart     = "../../../helm-charts/ambassador-config"
   namespace = "ambassador"
 
   depends_on = [
