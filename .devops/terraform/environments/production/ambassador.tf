@@ -11,7 +11,7 @@ resource "helm_release" "ambassador" {
 
   set {
     name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
-    value = module.acm.this_acm_certificate_arn
+    value = module.acm.acm_certificate_arn
     type  = "string"
   }
 
@@ -62,7 +62,7 @@ resource "helm_release" "ambassador_config" {
 
   set {
     name  = "resolver.name"
-    value = local.resolver_name
+    value = var.resolver_name
   }
 
   set {
@@ -72,6 +72,6 @@ resource "helm_release" "ambassador_config" {
 
   set {
     name  = "ambassador.hostname"
-    value = local.domain
+    value = var.domain
   }
 }

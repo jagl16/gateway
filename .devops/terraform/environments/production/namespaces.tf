@@ -1,3 +1,13 @@
+resource "kubernetes_namespace" "ambassador" {
+  metadata {
+    name = "ambassador"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "kubernetes_namespace" "consul" {
   metadata {
     name = "consul"
@@ -8,15 +18,6 @@ resource "kubernetes_namespace" "consul" {
   }
 }
 
-resource "kubernetes_namespace" "ambassador" {
-  metadata {
-    name = "ambassador"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
 
 resource "kubernetes_namespace" "services" {
   metadata {
