@@ -1,39 +1,39 @@
-.PHONY: tf-init
-tf-init:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform init
+tf-plan-prod	tf-apply-prod	tf-state-prod	tf-destroy-prod: TERRAFORMWORKDIR=terraform/environments/production
+
+TERRAFORM_IMAGE := hashicorp/terraform@sha256:691e2f368183a1886b50fd7da16b4511f5ac914ff6b7c748a87a37e84b898c50
+
+TERRAFORM = docker run --rm \
+      	-e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+      	-e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+      	-e AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN} \
+		-v "${CURDIR}/.devops:/src" \
+		-w /src/$(TERRAFORMWORKDIR) \
+		${TERRAFORM_IMAGE}
 
 .PHONY: tf-fmt
-tf-fmt:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform fmt -recursive
+tf-fmt: ## Invokes terraform fmt command
+	${TERRAFORM} fmt -recursive
 
 .PHONY: tf-validate
-tf-validate:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform validate
+tf-validate: ## Invokes terraform validate command
+	${TERRAFORM} init -backend=false
+	${TERRAFORM} validate
+	${TERRAFORM} fmt -check
 
-.PHONY: tf-refresh
-tf-refresh:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform refresh
+.PHONY: tf-plan-%
+tf-plan-%: ## Invokes terraform plan command
+	${TERRAFORM} init
+	${TERRAFORM} plan
 
-.PHONY: tf-plan
-tf-plan:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform plan
+.PHONY: tf-apply-%
+tf-apply-%: ## Invokes terraform apply command
+	${TERRAFORM} init
+	${TERRAFORM} apply -auto-approve
 
-.PHONY: tf-apply
-tf-apply:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform apply
+.PHONY: tf-state-%
+tf-state-%: ## Invokes terraform state command
+	${TERRAFORM} state $(filter-out $@,$(MAKECMDGOALS))
 
-.PHONY: tf-approved-apply
-tf-approved-apply:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform apply -auto-approve
-
-.PHONY: tf-destroy
-tf-destroy:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform destroy
-
-.PHONY: tf-approved-apply
-tf-approved-destroy:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform destroy -auto-approve
-
-.PHONY: tf-destroy
-tf-current-workspace:
-	docker-compose -f .devops/terraform/docker-compose.yml run --rm terraform workspace show
+.PHONY: tf-destroy-%
+tf-destroy-%:  ## Invokes terraform destroy command
+	${TERRAFORM}  destroy -auto-approve
