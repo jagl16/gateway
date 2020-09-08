@@ -15,3 +15,8 @@ variable "common_tags" {
 variable "prefix" {
   description = "Prefix for resources."
 }
+
+variable "alternative_domains" {
+  description = "List of alternative domains."
+  default     = []
+}

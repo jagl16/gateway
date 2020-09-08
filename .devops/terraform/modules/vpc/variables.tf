@@ -23,4 +23,3 @@ variable "common_tags" {
 variable "prefix" {
   description = "Prefix for resources."
 }
-

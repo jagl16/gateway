@@ -19,9 +19,7 @@ module "acm" {
 
   wait_for_validation = true
 
-  subject_alternative_names = [
-    "www.${var.domain}",
-  ]
+  subject_alternative_names = var.alternative_domains
 
   tags = merge(
     var.common_tags,

@@ -25,4 +25,7 @@ module "acm" {
   common_tags = var.common_tags
   domain      = var.domain
   prefix      = var.prefix
+  alternative_domains = [
+    "www.${var.domain}"
+  ]
 }
