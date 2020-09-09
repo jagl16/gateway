@@ -83,8 +83,6 @@ jobs:
 
   validate:
     runs-on: ubuntu-latest
-    needs: [changes]
-    if: ${{ needs.changes.outputs.infrastructure == 'true' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -118,7 +116,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
       - name: Deploy Production
         run: |
-          cd .devops/terraform/production
+          cd .devops/terraform/environments/production
           terraform init
           terraform apply -auto-approve
 
