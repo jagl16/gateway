@@ -12,8 +12,6 @@ export type GetInitializerProps<C, IP> = Nullable<
 export interface Initializer<C, IP = Record<string, unknown>> {
     Provider: React.FC<IP> | ComponentType<IP>;
     getInitializerProps?: GetInitializerProps<C, IP>;
-    // prop types are not relevant for this, so type `any` is fine here
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     after?: Initializer<C, any>[];
 }
 

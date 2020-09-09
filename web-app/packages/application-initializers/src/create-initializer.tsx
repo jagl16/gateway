@@ -11,10 +11,10 @@ import {
 import { Optional } from "@scaling/utils";
 import { getInitializers } from "./get";
 
-export const createInitializerId = (idx: number) => `i${idx}`;
+const createInitializerId = (idx: number) => `i${idx}`;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export const createGetInitializerProps = <C, D extends any>(
+const createGetInitializerProps = <C, D extends any>(
     initializers: Initializer<C, D>[],
 ) => async (context: C): Promise<InitializerData<D>> => {
     const results = await Promise.all(
