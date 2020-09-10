@@ -1,4 +1,5 @@
 import React, { ComponentType, ReactElement } from "react";
+
 import { Nullable } from "@scaling/types";
 
 export type InitializerData<D = Record<string, unknown>> = D | null;

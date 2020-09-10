@@ -32,7 +32,7 @@
   "rules": {
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "react/button-has-type": "error",
+    "react/button-has-type": "warn",
     "react/jsx-filename-extension": ["error", {"extensions": [".tsx"]}],
     "react/jsx-no-literals": "warn",
     "react/prop-types": "off",

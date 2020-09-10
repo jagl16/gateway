@@ -35,7 +35,7 @@ const createGetInitializerProps = <C, D extends any>(
 
 export const createInitializers = <C, D = Record<string, unknown>>(
     requireContext: RequireContext,
-) => {
+): InitializersProvider<InitializationProvidersProps<D>, C, D> => {
     const initializers = getInitializers<C, D>(requireContext);
     const Initializers: InitializersProvider<
         InitializationProvidersProps<D>,
@@ -52,8 +52,7 @@ export const createInitializers = <C, D = Record<string, unknown>>(
             return <Provider {...providerData}>{children}</Provider>;
         }, children);
 
-    const getInitializerProps = createGetInitializerProps(initializers);
-    Initializers.getInitializerProps = getInitializerProps;
+    Initializers.getInitializerProps = createGetInitializerProps(initializers);
 
     return Initializers;
 };

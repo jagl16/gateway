@@ -10,6 +10,7 @@ abstract class Optional<T> {
     abstract orElse(alternative: T): T;
     abstract orElseGet(supplier: () => T): T;
     abstract orElseThrow(supplier: () => void): T;
+
     /**
      * If value is present apply the fn on it otherwise return falsy, useful
      * when dealing with jsx templates where we can show the element only if
@@ -23,7 +24,7 @@ abstract class Optional<T> {
         return this.isPresent() && fn(this.value);
     }
 
-    fold<U>(asNone: () => U, asSome: (value: T) => U) {
+    fold<U>(asNone: () => U, asSome: (value: T) => U): U {
         return this.map(asSome).orElseGet(asNone);
     }
 

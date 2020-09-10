@@ -1,7 +1,7 @@
 {
-  "name": "@scaling-applications/auth",
+  "name": "@ui/forms",
   "version": "0.1.0",
-  "module": "index.tsx",
+  "module": "index.ts",
   "license": "MIT",
   "sideEffects": false
 }

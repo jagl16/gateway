@@ -1,2 +1,2 @@
 export { Optional } from "./optional"
-export { noop } from "./noop"
+export { noop, cn } from "./functions"

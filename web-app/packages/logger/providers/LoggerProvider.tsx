@@ -3,7 +3,7 @@ import React, { FC, useCallback, useMemo} from "react";
 import { Log } from "../context/log";
 import { LogEvent } from "@scaling/logger/types";
 
-const createLogger = () => {
+const useCreateLogger = () => {
     const log = useCallback((event: LogEvent) => {
         if (typeof window === 'undefined') {
             return;
@@ -18,7 +18,7 @@ const createLogger = () => {
 }
 
 export const LoggerProvider: FC = ({ children }) => {
-    const logger = createLogger()
+    const logger = useCreateLogger()
 
     return (
         <Log.Provider value={logger}>

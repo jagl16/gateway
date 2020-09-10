@@ -1,0 +1,7 @@
+{
+  "name": "@ui/card",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "license": "MIT",
+  "sideEffects": false
+}

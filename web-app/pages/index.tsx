@@ -3,8 +3,9 @@ import { GetStaticProps, NextPage } from "next";
 
 import { LoggerProvider } from "@scaling/logger"
 
-import { Login, Initializers } from "@scaling-applications/auth";
+import { Login, Initializers } from "@scaling-applications/passport";
 import { InitializerData } from "@scaling/application-initializers";
+import { GuestLayout } from "@ui/layouts";
 
 interface IndexPageInitialProps {
     data: InitializerData;
@@ -16,7 +17,9 @@ const IndexPage: NextPage<IndexPageProps, IndexPageInitialProps> = ({ data }) =>
     return (
         <Initializers data={data}>
             <LoggerProvider>
-                <Login />
+                <GuestLayout>
+                    <Login />
+                </GuestLayout>
             </LoggerProvider>
         </Initializers>
     )

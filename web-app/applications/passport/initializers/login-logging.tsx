@@ -10,7 +10,7 @@ const LoginLoggingProvider: FC = (props) => {
         logger.log({
             message: "Log in page has been loaded."
         });
-    }, []);
+    });
 
     return <>{props.children}</>;
 };

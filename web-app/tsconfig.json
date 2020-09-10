@@ -20,6 +20,7 @@
     "baseUrl": "./",
     "paths": {
       "@scaling/*": ["./packages/*"],
+      "@ui/*": ["./components/ui/*"],
       "@scaling-applications/*": ["./applications/*"]
     },
     "outDir": ""

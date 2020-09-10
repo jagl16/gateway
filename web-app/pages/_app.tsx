@@ -5,7 +5,7 @@ import App, {
     AppContext
 } from "next/app";
 
-import "./main.css"
+import "../styles/main.css"
 
 import { createInitializers, InitializerData } from "@scaling/application-initializers";
 
@@ -22,11 +22,12 @@ const Application = ({
     initializersData,
     pageProps,
     Component
-}: ApplicationProps) => (
-    <Initializers data={initializersData}>
-        <Component {...pageProps} />
-    </Initializers>
-);
+}: ApplicationProps): JSX.Element =>
+    (
+        <Initializers data={initializersData}>
+            <Component {...pageProps} />
+        </Initializers>
+    )
 
 Application.getInitialProps = async (
     appContext: AppContext,

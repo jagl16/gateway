@@ -2,7 +2,7 @@ import { GetStaticPropsContext, NextPageContext } from "next";
 
 import { createInitializers } from "@scaling/application-initializers";
 
-export { default as Login } from "./components/Login"
+export { Login } from "./components/Login"
 
 const initializers = require.context('./initializers/', true, /\.ts(x)$/);
 
