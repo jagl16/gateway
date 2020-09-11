@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hello-world-service.fullname" . }}
+  name: {{ include "service.fullname" . }}
   labels:
-  {{- include "hello-world-service.labels" . | nindent 4 }}
+  {{- include "service.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-  {{- include "hello-world-service.selectorLabels" . | nindent 6 }}
+  {{- include "service.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-      {{- include "hello-world-service.selectorLabels" . | nindent 8 }}
+      {{- include "service.selectorLabels" . | nindent 8 }}
       annotations:
         "consul.hashicorp.com/connect-inject": "true"
     spec:
@@ -20,7 +20,7 @@ spec:
       imagePullSecrets:
       {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "hello-world-service.serviceAccountName" . }}
+      serviceAccountName: {{ include "service.serviceAccountName" . }}
       securityContext:
       {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
