@@ -5,7 +5,7 @@ resource "helm_release" "hello_world" {
 
   depends_on = [
     kubernetes_namespace.services,
-    helm_release.ambassador,
-    helm_release.consul,
+    module.consul,
+    module.ambassador,
   ]
 }

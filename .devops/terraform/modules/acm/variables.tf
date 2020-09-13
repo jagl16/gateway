@@ -19,4 +19,5 @@ variable "prefix" {
 variable "alternative_domains" {
   description = "List of alternative domains."
   default     = []
+  type        = list(string)
 }

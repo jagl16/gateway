@@ -5,7 +5,6 @@ resource "helm_release" "consul" {
   namespace  = "consul"
 
   depends_on = [
-    module.eks,
     kubernetes_namespace.consul,
   ]
 

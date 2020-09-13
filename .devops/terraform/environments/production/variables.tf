@@ -6,8 +6,16 @@ variable "prefix" {
   default = "scaling"
 }
 
-variable "domain" {
+variable "root_domain" {
   default = "scaling.cloud"
+}
+
+variable "app_domain" {
+  default = "app.scaling.cloud"
+}
+
+variable "api_domain" {
+  default = "api.scaling.cloud"
 }
 
 variable "use_existing_route53_zone" {

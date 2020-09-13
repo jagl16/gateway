@@ -18,3 +18,8 @@ variable "common_tags" {
 variable "prefix" {
   description = "Prefix for resources."
 }
+
+variable "worker_groups_launch_template" {
+  default = ""
+  type    = any
+}

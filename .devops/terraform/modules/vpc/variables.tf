@@ -17,9 +17,13 @@ variable "cluster_name" {
 }
 
 variable "common_tags" {
-  description = "List of common tags."
+  description = "A mapping of tags to assign to the resources."
+  type        = map(string)
+  default     = {}
 }
 
 variable "prefix" {
-  description = "Prefix for resources."
+  description = " Creates a unique resource beginning with the specified prefix."
+  type        = string
+  default     = null
 }

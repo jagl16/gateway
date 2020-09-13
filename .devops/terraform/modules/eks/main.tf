@@ -14,16 +14,7 @@ module "eks" {
     aws_iam_policy.autoscaler_policy.arn,
   ]
 
-  worker_groups_launch_template = [
-    {
-      name                 = "worker-group-1"
-      instance_type        = "t3.large"
-      asg_desired_capacity = 3
-      asg_max_size         = 5
-      asg_min_size         = 3
-      autoscaling_enabled  = true
-    }
-  ]
+  worker_groups_launch_template = var.worker_groups_launch_template
 
   tags = merge(
     var.common_tags,

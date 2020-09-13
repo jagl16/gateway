@@ -1,6 +1,6 @@
-resource "kubernetes_namespace" "services" {
+resource "kubernetes_namespace" "consul" {
   metadata {
-    name = "services"
+    name = "consul"
   }
 
   lifecycle {

@@ -5,13 +5,12 @@ resource "helm_release" "ambassador" {
   namespace  = "ambassador"
 
   depends_on = [
-    module.eks,
     kubernetes_namespace.ambassador,
   ]
 
   set {
     name  = "service.annotations.service\\.beta\\.kubernetes\\.io/aws-load-balancer-ssl-cert"
-    value = module.acm.acm_certificate_arn
+    value = var.acm_certificate_arn
     type  = "string"
   }
 
@@ -56,7 +55,6 @@ resource "helm_release" "ambassador_config" {
 
   depends_on = [
     kubernetes_namespace.ambassador,
-    helm_release.consul,
     helm_release.ambassador,
   ]
 
@@ -67,11 +65,11 @@ resource "helm_release" "ambassador_config" {
 
   set {
     name  = "consul.host"
-    value = format("consul-server.%s.svc.cluster.local:8500", helm_release.consul.namespace)
+    value = var.consul_host
   }
 
   set {
     name  = "ambassador.hostname"
-    value = var.domain
+    value = var.ambassador_hostname
   }
 }
