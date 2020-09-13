@@ -20,14 +20,13 @@ spec:
       imagePullSecrets:
       {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "service.serviceAccountName" . }}
       securityContext:
       {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.version }}"
+          image: "096007086684.dkr.ecr.eu-west-1.amazonaws.com/scaling-cloud/hello-world:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
