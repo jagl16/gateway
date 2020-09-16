@@ -97,10 +97,10 @@ module "route53" {
 }
 
 #https://github.com/terraform-providers/terraform-provider-aws/issues/3020
-resource "aws_s3_bucket_object" "web_app" {
-  for_each = fileset(path.module, "../../../../web-app/out")
+resource "aws_s3_bucket_object" "file_upload" {
+  for_each = fileset("${pathexpand("/src/web-app")}/out", "**")
 
-  bucket = module.s3.bucket_id
-  key    = each.value
-  source = "${path.module}/${each.value}"
+  bucket = module.s3.bucket_id[0]
+  key = each.value
+  source = "${pathexpand("/src/web-app")}/out/${each.value}"
 }
