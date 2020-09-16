@@ -18,12 +18,13 @@ variable "api_domain" {
   default = "api.scaling.cloud"
 }
 
-variable "use_existing_route53_zone" {
-  default = true
-}
-
 variable "resolver_name" {
   default = "consul-dc1"
+}
+
+variable "use_existing_route53_zone" {
+  type    = bool
+  default = true
 }
 
 variable "vpc_cidr" {
