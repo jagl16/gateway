@@ -2,10 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "jsx": "preserve",
-    "lib": [
-      "DOM",
-      "ESNext"
-    ],
+    "lib": ["DOM", "ESNext"],
     "noEmit": true,
     "skipLibCheck": true,
     "strict": true,
@@ -25,12 +22,6 @@
     },
     "outDir": ""
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

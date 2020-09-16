@@ -1,1 +1,1 @@
-export { default as GuestLayout } from "./src/GuestLayout"
+export { default as GuestLayout } from './src/GuestLayout'

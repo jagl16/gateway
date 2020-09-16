@@ -1,3 +1,3 @@
-export { useLogger } from "./hooks/use-logger"
+export { useLogger } from './hooks/use-logger'
 
-export { LoggerProvider } from "./providers/LoggerProvider"
+export { LoggerProvider } from './providers/LoggerProvider'

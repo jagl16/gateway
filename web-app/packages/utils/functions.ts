@@ -1,5 +1,7 @@
-export const noop = (): void => {};
+export const noop = (): void => {}
 
-export const cn = (...classes: (false | null | undefined | string)[]): string => {
-    return classes.filter(Boolean).join(' ')
+export const cn = (
+  ...classes: (false | null | undefined | string)[]
+): string => {
+  return classes.filter(Boolean).join(' ')
 }

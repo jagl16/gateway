@@ -1,9 +1,9 @@
 export interface LogEvent {
-    message: string
+  message: string
 }
 
 export interface LogInterface {
-    log: LogFunction;
+  log: LogFunction
 }
 
-export type LogFunction = (event: LogEvent) => void;
+export type LogFunction = (event: LogEvent) => void

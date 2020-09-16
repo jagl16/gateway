@@ -1,12 +1,9 @@
 module.exports = {
   future: {
     removeDeprecatedGapUtilities: true,
-    purgeLayersByDefault: true
+    purgeLayersByDefault: true,
   },
-  purge: [
-    './**/*.ts',
-    './**/*.tsx',
-  ],
+  purge: ['./**/*.ts', './**/*.tsx'],
   theme: {
     extend: {},
   },

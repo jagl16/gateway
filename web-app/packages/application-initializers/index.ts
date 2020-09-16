@@ -1,10 +1,8 @@
-export * from './types';
+export * from './types'
+
+export { createInitializers } from './src/create-initializer'
 
 export {
-    createInitializers,
-} from './src/create-initializer';
-
-export {
-    createApplicationInitializer,
-    createMicroApplicationInitializer
-}  from './src/create-application-initializers';
+  createApplicationInitializer,
+  createMicroApplicationInitializer,
+} from './src/create-application-initializers'
