@@ -1,3 +1,15 @@
+data "aws_route53_zone" "dns_zone" {
+  count = var.use_existing_route53_zone ? 1 : 0
+
+  name         = var.root_domain
+  private_zone = false
+}
+
+resource "aws_route53_zone" "dns_zone" {
+  count = ! var.use_existing_route53_zone ? 1 : 0
+  name  = var.root_domain
+}
+
 module "eks" {
   source = "../../modules/eks"
 
@@ -33,13 +45,13 @@ module "vpc" {
 module "acm" {
   source = "../../modules/acm"
 
-  common_tags = var.common_tags
+  dns_zone_id = coalescelist(data.aws_route53_zone.dns_zone.*.zone_id, aws_route53_zone.dns_zone.*.zone_id)[0]
   domain      = var.root_domain
-  prefix      = var.prefix
   alternative_domains = [
-    var.app_domain,
     var.api_domain,
   ]
+  prefix      = var.prefix
+  common_tags = var.common_tags
 }
 
 module "consul" {
@@ -49,7 +61,6 @@ module "consul" {
     module.eks,
   ]
 }
-
 
 module "ambassador" {
   source = "../../modules/ambassador"
