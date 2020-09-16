@@ -15,7 +15,6 @@ module "acm" {
   prefix      = var.prefix
 }
 
-
 module "s3" {
   source = "../../modules/s3"
 
@@ -96,11 +95,28 @@ module "route53" {
   common_tags = var.common_tags
 }
 
+locals {
+  source_dir = "${pathexpand("/src/web-app")}/out"
+  content_type_map = {
+    html = "text/html",
+    js   = "application/javascript",
+    css  = "text/css",
+    svg  = "image/svg+xml",
+    jpg  = "image/jpeg",
+    ico  = "image/x-icon",
+    png  = "image/png",
+    gif  = "image/gif",
+    pdf  = "application/pdf"
+  }
+}
+
 #https://github.com/terraform-providers/terraform-provider-aws/issues/3020
 resource "aws_s3_bucket_object" "file_upload" {
-  for_each = fileset("${pathexpand("/src/web-app")}/out", "**")
+  for_each = fileset(local.source_dir, "**")
 
-  bucket = module.s3.bucket_id[0]
-  key = each.value
-  source = "${pathexpand("/src/web-app")}/out/${each.value}"
+  bucket       = module.s3.bucket_id[0]
+  key          = each.value
+  source       = "${local.source_dir}/${each.value}"
+  etag         = filemd5("${local.source_dir}/${each.value}")
+  content_type = lookup(local.content_type_map, regex("\\.(?P<extension>[A-Za-z0-9]+)$", each.value).extension, "text/html")
 }
