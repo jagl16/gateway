@@ -11,6 +11,9 @@ TERRAFORM = docker run --rm \
 		-w /src/$(TERRAFORMWORKDIR) \
 		${TERRAFORM_IMAGE}
 
+RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+$(eval $(args) $(RUN_ARGS):;@:)
+
 .PHONY: tf-fmt
 tf-fmt: ## Invokes terraform fmt command
 	${TERRAFORM} fmt -recursive
@@ -33,7 +36,7 @@ tf-apply-%: ## Invokes terraform apply command
 
 .PHONY: tf-state-%
 tf-state-%: ## Invokes terraform state command
-	${TERRAFORM} state $(filter-out $@,$(MAKECMDGOALS))
+	${TERRAFORM} state $(args) $(RUN_ARGS)
 
 .PHONY: tf-destroy-%
 tf-destroy-%:  ## Invokes terraform destroy command
