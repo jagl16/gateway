@@ -1,0 +1,79 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build_web-app:
+    runs-on: ubuntu-latest
+    env:
+      node: 14.10.x
+    defaults:
+      run:
+        working-directory: web-app
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node }}
+
+      - uses: actions/cache@v1
+        id: node_modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install Dependencies
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile --ignore-optional --ignore-platform --ignore-engines --emoji false --silent --no-progress --no-node-version-check
+
+      - name: Build
+        run: |
+          yarn build
+
+  build_gateway:
+    runs-on: ubuntu-20.04
+    env:
+      java: 11.0.x
+    defaults:
+      run:
+        working-directory: gateway
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Install AWS credential helper
+        run: |
+          sudo apt update
+          sudo apt install amazon-ecr-credential-helper
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ env.java }}
+
+      - name: Build, tag and push image to Amazon ECR
+        uses: eskatos/gradle-command-action@v1
+        with:
+          build-root-directory: gateway
+          wrapper-cache-enabled: true
+          dependencies-cache-enabled: true
+          configuration-cache-enabled: true
+          arguments: jib

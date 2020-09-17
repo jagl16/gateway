@@ -10,7 +10,7 @@
     "start": "next start",
     "build": "next build && next export",
     "typecheck": "tsc",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "eslint --ext .js,.ts,.tsx .",
     "format": "prettier --write --check \"!.next\" \"!out\" ."
   },

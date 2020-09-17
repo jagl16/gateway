@@ -1,5 +1,6 @@
 module.exports = {
   setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   testMatch: ['**/?(*.)+(spec|test).[jt]s?(x)'],
   transform: {
     '^.+\\.(ts|tsx)$': '<rootDir>/node_modules/ts-jest',

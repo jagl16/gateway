@@ -1,0 +1,54 @@
+name: Test Web App
+
+on:
+  push:
+    branches:
+    paths:
+      - 'web-app/**'
+  pull_request:
+    branches:
+    paths:
+      - 'web-app/**'
+
+env:
+  node: 14.10.x
+
+defaults:
+  run:
+    working-directory: web-app
+
+jobs:
+  test_and_lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.node }}
+
+      - uses: actions/cache@v1
+        id: node_modules
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install Dependencies
+        if: steps.node_modules.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile --ignore-optional --ignore-platform --ignore-engines --emoji false --silent --no-progress --no-node-version-check
+
+      - name: Test
+        run: |
+          yarn test
+
+      - name: Type Check
+        run: |
+          yarn typecheck
+
+      - name: Type Check
+        run: |
+          yarn lint
