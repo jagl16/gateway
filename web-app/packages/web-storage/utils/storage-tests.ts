@@ -2,7 +2,7 @@ import { WebStorage } from '../create-storage'
 
 export const createStorageTests = (
   createStorage: () => WebStorage | Storage,
-) => {
+): void => {
   let storage: WebStorage | Storage
 
   beforeEach(() => {

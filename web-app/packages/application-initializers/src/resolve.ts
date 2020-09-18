@@ -1,13 +1,18 @@
 import { Initializer } from '@scaling/application-initializers/types'
 
-export const resolve = <C, P>(initializers: Initializer<C, P>[]) => {
+export const resolve = <C, P>(
+  initializers: Initializer<C, P>[],
+): Initializer<C, P>[] => {
   const result: Initializer<C, P>[] = []
   const done = new Set<Initializer<C, P>>()
   const processing = new Set<Initializer<C, P>>()
 
   const visit = (initializer: Initializer<C, P>) => {
     // We already visited this one
-    if (done.has(initializer)) return
+    if (done.has(initializer)) {
+      return
+    }
+
     if (processing.has(initializer)) {
       const displayName = initializer.Provider.displayName || 'Unknown'
       throw new Error(
@@ -17,6 +22,7 @@ export const resolve = <C, P>(initializers: Initializer<C, P>[]) => {
           '`',
       )
     }
+
     // Mark initializer as being processed
     processing.add(initializer)
 
@@ -31,6 +37,8 @@ export const resolve = <C, P>(initializers: Initializer<C, P>[]) => {
     // Move to head of result
     result.unshift(initializer)
   }
+
   initializers.forEach(visit)
+
   return result
 }

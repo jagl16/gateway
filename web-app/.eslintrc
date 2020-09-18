@@ -13,7 +13,7 @@
     "plugin:testing-library/react",
     "plugin:jest-dom/recommended"
   ],
-  "ignorePatterns": ["dist"],
+  "ignorePatterns": ["out"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -30,17 +30,19 @@
     "jest-dom"
   ],
   "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/no-empty-function": "off",
     "react/button-has-type": "warn",
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
-    "react/jsx-no-literals": "warn",
+    "react/jsx-no-literals": "off",
     "react/prop-types": "off",
     "react/no-array-index-key": "error",
     "react/no-danger": "error",
     "react/no-multi-comp": "warn",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "jest/no-export": "off"
   },
   "settings": {
     "react": {

@@ -1,5 +1,4 @@
 import { createStorage } from './create-storage'
-import { createSimpleObjectStorage } from './create-simple-object-storage'
 import { createStorageTests, createCustomStorageTests } from './utils'
 
 describe('createStorage', () => {
@@ -11,9 +10,10 @@ describe('createStorage', () => {
   })
 
   describe('with: fallback', () => {
-    const storage = () => createStorage(() => {
-      throw Error
-    })
+    const storage = () =>
+      createStorage(() => {
+        throw Error
+      })
 
     createCustomStorageTests(storage)
     createStorageTests(storage)

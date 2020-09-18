@@ -1,6 +1,8 @@
 import { WebStorage } from '@scaling/web-storage/create-storage'
 
-export const createCustomStorageTests = (createStorage: () => WebStorage) => {
+export const createCustomStorageTests = (
+  createStorage: () => WebStorage,
+): void => {
   let storage: WebStorage
 
   beforeEach(() => {
