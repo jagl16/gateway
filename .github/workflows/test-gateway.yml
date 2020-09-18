@@ -30,10 +30,6 @@ jobs:
         with:
           java-version: ${{ env.java }}
 
-      - name: Test Services
-        uses: eskatos/gradle-command-action@v1
-        with:
-          wrapper-cache-enabled: true
-          dependencies-cache-enabled: true
-          configuration-cache-enabled: true
-          arguments: test
+      - name: Test
+        run: |
+          ./gradlew clean test
