@@ -5,13 +5,13 @@ on:
     inputs:
       build:
         description: "Build Workflow"
-        default: "build.yml"
         required: false
+        default: "build.yml"
 
 jobs:
   deploy_preview:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref != 'refs/heads/master'
 
     steps:
       - uses: actions/checkout@v2
@@ -33,6 +33,11 @@ jobs:
         run: |
           echo ${{ steps.check.outputs.status }}
           exit 1
+
+      - name: Build workflow success
+        run: |
+          echo ${{ steps.check.outputs.status }}
+          exit 0
 
   deploy_production:
     runs-on: ubuntu-latest
