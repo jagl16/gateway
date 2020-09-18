@@ -1,0 +1,33 @@
+name: Test Infrastructure
+
+on:
+  push:
+    branches:
+    paths:
+      - '.devops/terraform/**'
+  pull_request:
+    branches:
+    paths:
+      - '.devops/terraform/**'
+
+
+defaults:
+  run:
+    working-directory: .devops/terraform
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 0.13.2
+
+      - name: Validate Terraform
+        run: |
+          terraform init -backend=false
+          terraform validate
+          terraform fmt -check

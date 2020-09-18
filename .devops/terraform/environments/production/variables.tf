@@ -6,16 +6,25 @@ variable "prefix" {
   default = "scaling"
 }
 
-variable "domain" {
+variable "root_domain" {
   default = "scaling.cloud"
 }
 
-variable "use_existing_route53_zone" {
-  default = true
+variable "app_domain" {
+  default = "app.scaling.cloud"
+}
+
+variable "api_domain" {
+  default = "api.scaling.cloud"
 }
 
 variable "resolver_name" {
   default = "consul-dc1"
+}
+
+variable "use_existing_route53_zone" {
+  type    = bool
+  default = true
 }
 
 variable "vpc_cidr" {

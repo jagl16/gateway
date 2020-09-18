@@ -1,0 +1,7 @@
+apiVersion: getambassador.io/v1
+kind: Mapping
+metadata:
+  name: {{ include "service.fullname" . }}
+spec:
+  prefix: /hello-world
+  service: {{ .Chart.Name }}

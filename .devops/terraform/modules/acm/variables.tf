@@ -3,20 +3,24 @@ variable "domain" {
   type        = string
 }
 
-variable "use_existing_route53_zone" {
-  default     = true
-  description = ""
+variable "dns_zone_id" {
+  description = "Zone ID of Route53 zone."
+  type        = string
 }
 
 variable "common_tags" {
-  description = "List of common tags."
+  description = "A mapping of tags to assign to the resources."
+  type        = map(string)
+  default     = {}
 }
 
 variable "prefix" {
-  description = "Prefix for resources."
+  description = " Creates a unique resource beginning with the specified prefix."
+  type        = string
 }
 
 variable "alternative_domains" {
   description = "List of alternative domains."
   default     = []
+  type        = list(string)
 }

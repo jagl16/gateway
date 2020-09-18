@@ -1,0 +1,7 @@
+{
+  "name": "@scaling/web-storage",
+  "version": "0.1.0",
+  "module": "index.ts",
+  "license": "MIT",
+  "sideEffects": false
+}

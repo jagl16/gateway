@@ -75,7 +75,7 @@ subprojects {
                 image = "docker.io/adoptopenjdk/openjdk11:alpine-slim"
             }
             to {
-                image = "096007086684.dkr.ecr.eu-west-1.amazonaws.com/scaling-cloud/${project.name}"
+                image = "${System.getenv("DOCKER_REGISTRY")}/scaling-cloud/${project.name}"
             }
             container {
                 jvmFlags = listOf(
