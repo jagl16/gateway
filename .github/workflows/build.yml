@@ -77,6 +77,15 @@ jobs:
         with:
           java-version: ${{ env.java }}
 
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Build, tag and push image to Amazon ECR
         run: |
-          ./gradlew clean jib
+          ./gradlew jib
