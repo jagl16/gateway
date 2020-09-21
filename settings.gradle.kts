@@ -1,4 +1,4 @@
-rootProject.name = "scaling.cloud"
+rootProject.name = "gateway"
 
 apply(from = "buildSource/settings.gradle.kts")
 
