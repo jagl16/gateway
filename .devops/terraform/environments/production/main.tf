@@ -10,14 +10,24 @@ resource "aws_route53_zone" "dns_zone" {
   name  = var.root_domain
 }
 
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+
+  config = {
+    bucket         = "scaling-cloud-tfstate-erik.vandam"
+    key            = "prod.core.scaling-cloud.tfstate"
+    region         = "eu-west-1"
+  }
+}
+
 module "eks" {
   source = "../../modules/eks"
 
   cluster_name = var.cluster_name
   common_tags  = var.common_tags
   prefix       = var.prefix
-  subnets      = module.vpc.private_subnets
-  vpc_id       = module.vpc.vpc_id
+  subnets      = data.terraform_remote_state.vpc.outputs.private_subnets
+  vpc_id       = data.terraform_remote_state.vpc.outputs.vpc_id
 
   worker_groups_launch_template = [
     {
@@ -29,17 +39,6 @@ module "eks" {
       autoscaling_enabled  = true
     }
   ]
-}
-
-module "vpc" {
-  source = "../../modules/vpc"
-
-  cluster_name        = var.cluster_name
-  common_tags         = var.common_tags
-  prefix              = var.prefix
-  vpc_cidr            = var.vpc_cidr
-  vpc_private_subnets = var.vpc_private_subnets
-  vpc_public_subnets  = var.vpc_public_subnets
 }
 
 module "acm" {
