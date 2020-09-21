@@ -10,7 +10,6 @@ on:
     paths:
       - '.devops/terraform/**'
 
-
 defaults:
   run:
     working-directory: .devops/terraform

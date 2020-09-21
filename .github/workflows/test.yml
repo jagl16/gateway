@@ -4,22 +4,20 @@ on:
   push:
     branches:
     paths:
-      - 'gateway/**'
+      - '**.kt'
+      - '**.kts'
   pull_request:
     branches:
+      - 'master'
     paths:
-      - 'gateway/**'
-
-env:
-  java: 11.0.x
-
-defaults:
-  run:
-    working-directory: gateway
+      - '**.kt'
+      - '**.kts'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      java: 11.0.x
 
     steps:
       - uses: actions/checkout@v2

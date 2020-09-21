@@ -12,7 +12,6 @@ Scaling Cloud is a project to practice tools and technologies such as Kotlin, Sp
 * [Gradle](https://gradle.org/) - Used as the dependency manager
 * [Consul](https://www.consul.io/) - Used as the service discovery
 * [Ambassador](https://www.getambassador.io/) - Used as the API gateway
-* [React](https://reactjs.org/) - Used as the framework for building the user interface
 * [GitHub Actions](https://github.com/features/actions) - Used as the CI/CD pipeline
 
 ## Authors

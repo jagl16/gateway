@@ -4,53 +4,18 @@ on:
   push:
     branches:
     paths:
-      - 'web-app/**'
-      - 'gateway/**'
+      - '**.kt'
+      - '**.kts'
   pull_request:
     branches:
-      - master
+      - 'master'
     paths:
-      - 'web-app/**'
-      - 'gateway/**'
+      - '**.kt'
+      - '**.kts'
 
 jobs:
-  build_web-app:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: web-app
-    env:
-      node: 14.10.x
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.node }}
-
-      - uses: actions/cache@v1
-        id: node_modules
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
-
-      - name: Install Dependencies
-        if: steps.node_modules.outputs.cache-hit != 'true'
-        run: |
-          yarn install --frozen-lockfile --ignore-optional --ignore-platform --ignore-engines --emoji false --silent --no-progress --no-node-version-check
-
-      - name: Build
-        run: |
-          yarn build
-
-  build_gateway:
+  build:
     runs-on: ubuntu-20.04
-    defaults:
-      run:
-        working-directory: gateway
     env:
       java: 11.0.x
       DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
