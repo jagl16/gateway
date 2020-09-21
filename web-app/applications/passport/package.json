@@ -1,7 +1,0 @@
-{
-  "name": "@scaling-applications/passport",
-  "version": "0.1.0",
-  "module": "index.tsx",
-  "license": "MIT",
-  "sideEffects": false
-}
