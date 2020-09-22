@@ -1,3 +1,40 @@
+terraform {
+  required_version = ">= 0.13"
+
+  backend "s3" {
+    bucket         = "scaling-cloud-tfstate-erik.vandam"
+    key            = "prod.gateway.scaling-cloud.tfstate"
+    region         = "eu-west-1"
+    encrypt        = true
+    dynamodb_table = "scaling-cloud-tfstate-lock"
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.5.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 1.2.4"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 1.13.1"
+    }
+  }
+}
+
+data "terraform_remote_state" "core" {
+  backend = "s3"
+
+  config = {
+    bucket         = "scaling-cloud-tfstate-erik.vandam"
+    key            = "prod.core.scaling-cloud.tfstate"
+    region         = "eu-west-1"
+  }
+}
+
 data "aws_route53_zone" "dns_zone" {
   count = var.use_existing_route53_zone ? 1 : 0
 
@@ -8,37 +45,6 @@ data "aws_route53_zone" "dns_zone" {
 resource "aws_route53_zone" "dns_zone" {
   count = ! var.use_existing_route53_zone ? 1 : 0
   name  = var.root_domain
-}
-
-data "terraform_remote_state" "vpc" {
-  backend = "s3"
-
-  config = {
-    bucket         = "scaling-cloud-tfstate-erik.vandam"
-    key            = "prod.core.scaling-cloud.tfstate"
-    region         = "eu-west-1"
-  }
-}
-
-module "eks" {
-  source = "../../modules/eks"
-
-  cluster_name = var.cluster_name
-  common_tags  = var.common_tags
-  prefix       = var.prefix
-  subnets      = data.terraform_remote_state.vpc.outputs.private_subnets
-  vpc_id       = data.terraform_remote_state.vpc.outputs.vpc_id
-
-  worker_groups_launch_template = [
-    {
-      name                 = "worker-group-1"
-      instance_type        = "t3.large"
-      asg_desired_capacity = 3
-      asg_max_size         = 5
-      asg_min_size         = 2
-      autoscaling_enabled  = true
-    }
-  ]
 }
 
 module "acm" {
@@ -55,17 +61,12 @@ module "acm" {
 
 module "consul" {
   source = "../../modules/consul"
-
-  depends_on = [
-    module.eks,
-  ]
 }
 
 module "ambassador" {
   source = "../../modules/ambassador"
 
   depends_on = [
-    module.eks,
     module.consul,
   ]
 

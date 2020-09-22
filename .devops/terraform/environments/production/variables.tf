@@ -1,7 +1,3 @@
-variable "cluster_name" {
-  default = "scaling-cluster"
-}
-
 variable "prefix" {
   default = "scaling"
 }
@@ -19,6 +15,7 @@ variable "resolver_name" {
 }
 
 variable "use_existing_route53_zone" {
+  description = "Re-use the existing Route53 zone."
   type    = bool
   default = true
 }
